@@ -39,13 +39,13 @@ Food.prototype = Object.create(Item.prototype,{
  * @property {method} getPack              Returns private variable `pack`.
  * @property {method} getMaxHealth         Returns private variable `maxHealth`.
  */
-function Player (name, health, strength, speed, pack, maxHealth){
+function Player (name, health, strength, speed){
     this.name = name;
     this.health = health;
     this.strength = strength;
     this.speed = speed;
-    pack = [];
-    this.maxHealth = maxHealth;
+    var pack = [];
+    var maxHealth = health;
     this.isAlive = true;
     this.equipped = false;
     this.getPack = function (){
@@ -54,29 +54,35 @@ function Player (name, health, strength, speed, pack, maxHealth){
     this.getMaxHealth = function (){
       return this.health;
     };
-    this.checkPack = function (){
-      return pack;
-    };
-    this.takeItem = function (item){
-      if(pack.length<3){
-        this.getPack.push(item);
-      }
-    };
-    this.discardItem = function (item){
-    };
+
     this.equip = function (item){
-      if(item instanceof Food&&this.equipped===false){
-        this.equipped=true;
+      if(item instanceof Weapon&&this.equipped===false){
+        if(this.getPack())
+        this.equipped=item;
       }
       return false;
     };
+
     this.eat = function (item){
-      if(item instanceof Food){
-        console.log("THIS IS SUM TASTY SHIT, AINT IT?");
+      if (item instanceof Food){
+        if (this.getPack().indexOf(item) > -1 ){
+          this.health += item.property;
       }
+
+        }
     };
-  }
-//Player.prototype.discardItem = function (){};
+
+   /*   if(item instanceof Food){
+        for(var i=0;i<=3;i++){
+          if(pack[i] instanceof Food){
+            this.health += item.number;
+          }
+        }
+          return false;
+      }
+      return false;*/
+}
+
 /**
  * Player Class Method => checkPack()
  * -----------------------------
@@ -88,6 +94,10 @@ function Player (name, health, strength, speed, pack, maxHealth){
  *
  * @name checkPack
  */
+
+  Player.prototype.checkPack = function (){
+      return this.getPack();
+    };
 /**
  * Player Class Method => takeItem(item)
  * -----------------------------
@@ -105,6 +115,13 @@ function Player (name, health, strength, speed, pack, maxHealth){
  * @param {Item/Weapon/Food} item   The item to take.
  * @return {boolean} true/false     Whether player was able to store item in pack.
  */
+Player.prototype.takeItem = function(item){
+      if(this.getPack().length>=3){
+        return false;
+      }else if(item){
+        this.getPack().push(item);
+    }
+  };
 /**
  * Player Class Method => discardItem(item)
  * -----------------------------
@@ -130,6 +147,9 @@ function Player (name, health, strength, speed, pack, maxHealth){
  * @param {Item/Weapon/Food} item   The item to discard.
  * @return {boolean} true/false     Whether player was able to remove item from pack.
  */
+Player.prototype.discardItem = function (){
+
+};
 
 
 /**
@@ -202,21 +222,7 @@ function Player (name, health, strength, speed, pack, maxHealth){
  */
 
 
-/**
- * Class => Zombie(health, strength, speed)
- * -----------------------------
- * Creates a normal zombie.
- *
- * @name Zombie
- * @param {number} health           The zombie's health.
- * @param {number} strength         The zombie's strength.
- * @param {number} speed            The zombie's speed.
- * @private {number} maxHealth      Default value should be set to `health`.
- * @property {number} health
- * @property {number} strength
- * @property {number} speed
- * @property {boolean} isAlive      Default value should be `true`.
- */
+
 function Zombie (health, strength, speed, maxHealth){
   this.health = health;
   this.strength = strength;
@@ -224,72 +230,27 @@ function Zombie (health, strength, speed, maxHealth){
   this.isAlive = true;
   maxHealth = maxHealth;
 }
-/**
- * Class => FastZombie(health, strength, speed)
- * -----------------------------
- * Creates a fast zombie.
- *
- * The FastZombie class constructor will call
- *   the super class (Zombie) constructor
- *   while passing in the 3 Zombie constructor params
- *
- * @name FastZombie
- * @param {number} health           The zombie's health.
- * @param {number} strength         The zombie's strength.
- * @param {number} speed            The zombie's speed.
- */
+
 function FastZombie (health, strength, speed, maxHealth){
   Zombie.call(this, health, strength, speed);
   this.health = health;
   this.strength = strength;
   this.speed = speed;
 }
-/**
- * FastZombie Extends Zombie Class
- * -----------------------------
- */
+
 FastZombie.prototype = Object.create(Zombie.prototype,{
 });
-/**
- * Class => StrongZombie(health, strength, speed)
- * -----------------------------
- * Creates a strong zombie.
- *
- * The StrongZombie class constructor will call
- *   the super class (Zombie) constructor
- *   while passing in the 3 Zombie constructor params
- *
- * @name StrongZombie
- * @param {number} health           The zombie's health.
- * @param {number} strength         The zombie's strength.
- * @param {number} speed            The zombie's speed.
- */
+
 function StrongZombie (health, strength, speed, maxHealth){
   Zombie.call(this, health, strength, speed);
   this.health = health;
   this.strength = strength;
   this.speed = speed;
 }
-/**
- * StrongZombie Extends Zombie Class
- * -----------------------------
- */
+
 StrongZombie.prototype = Object.create(Zombie.prototype,{
 });
-/**
- * Class => RangedZombie(health, strength, speed)
- * -----------------------------
- * Creates a ranged zombie.
- *
- * The RangedZombie class constructor will call
- *   the super class (Zombie) constructor
- *   while passing in the 3 Zombie constructor params
- *
- * @name RangedZombie
- * @param {number} health           The zombie's health.
- * @param {number} strength         The zombie's strength.
- * @param {number} speed            The zombie's speed.
- */
+
 function RangedZombie (health, strength, speed, maxHealth){
   Zombie.call(this, health, strength, speed);
   this.health = health;
@@ -298,20 +259,7 @@ function RangedZombie (health, strength, speed, maxHealth){
 }
 RangedZombie.prototype = Object.create(Zombie.prototype,{
 });
-/**
- * Class => ExplodingZombie(health, strength, speed)
- * -----------------------------
- * Creates an exploding zombie.
- *
- * The ExplodingZombie class constructor will call
- *   the super class (Zombie) constructor
- *   while passing in the 3 Zombie constructor params
- *
- * @name ExplodingZombie
- * @param {number} health           The zombie's health.
- * @param {number} strength         The zombie's strength.
- * @param {number} speed            The zombie's speed.
- */
+
 function ExplodingZombie (health, strength, speed, maxHealth){
   Zombie.call(this, health, strength, speed);
   this.health = health;
