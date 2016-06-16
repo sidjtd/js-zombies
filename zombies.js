@@ -1,12 +1,4 @@
-/**
- * Class => Item(name)
- * -----------------------------
- * Creates an item.
- *
- * @name Item
- * @param {string} name     The item's name.
- * @property {string} name
- */
+'use strict';
 function Item(name){
     this.name = name;
   }
@@ -47,7 +39,6 @@ Food.prototype = Object.create(Item.prototype,{
  * @property {method} getPack              Returns private variable `pack`.
  * @property {method} getMaxHealth         Returns private variable `maxHealth`.
  */
-
 function Player (name, health, strength, speed, pack, maxHealth){
     this.name = name;
     this.health = health;
@@ -227,11 +218,11 @@ function Player (name, health, strength, speed, pack, maxHealth){
  * @property {boolean} isAlive      Default value should be `true`.
  */
 function Zombie (health, strength, speed, maxHealth){
-  maxHealth = maxHealth;
-  this.health = this.health;
-  this.strength = this.strength;
-  this.speed = this.speed;
+  this.health = health;
+  this.strength = strength;
+  this.speed = speed;
   this.isAlive = true;
+  maxHealth = maxHealth;
 }
 /**
  * Class => FastZombie(health, strength, speed)
@@ -248,10 +239,10 @@ function Zombie (health, strength, speed, maxHealth){
  * @param {number} speed            The zombie's speed.
  */
 function FastZombie (health, strength, speed, maxHealth){
-  Zombie.call(this, name);
-  this.health = this.health;
-  this.strength = this.strength;
-  this.speed = this.speed;
+  Zombie.call(this, health, strength, speed);
+  this.health = health;
+  this.strength = strength;
+  this.speed = speed;
 }
 /**
  * FastZombie Extends Zombie Class
@@ -274,10 +265,10 @@ FastZombie.prototype = Object.create(Zombie.prototype,{
  * @param {number} speed            The zombie's speed.
  */
 function StrongZombie (health, strength, speed, maxHealth){
-  Zombie.call(this, name);
-  this.health = this.health;
-  this.strength = this.strength;
-  this.speed = this.speed;
+  Zombie.call(this, health, strength, speed);
+  this.health = health;
+  this.strength = strength;
+  this.speed = speed;
 }
 /**
  * StrongZombie Extends Zombie Class
@@ -299,15 +290,14 @@ StrongZombie.prototype = Object.create(Zombie.prototype,{
  * @param {number} strength         The zombie's strength.
  * @param {number} speed            The zombie's speed.
  */
-
-
-/**
- * StrongZombie Extends Zombie Class
- * -----------------------------
- */
-
-
-
+function RangedZombie (health, strength, speed, maxHealth){
+  Zombie.call(this, health, strength, speed);
+  this.health = health;
+  this.strength = strength;
+  this.speed = speed;
+}
+RangedZombie.prototype = Object.create(Zombie.prototype,{
+});
 /**
  * Class => ExplodingZombie(health, strength, speed)
  * -----------------------------
@@ -322,16 +312,14 @@ StrongZombie.prototype = Object.create(Zombie.prototype,{
  * @param {number} strength         The zombie's strength.
  * @param {number} speed            The zombie's speed.
  */
-
-
-/**
- * ExplodingZombie Extends Zombie Class
- * -----------------------------
- */
-
-
-
-
+function ExplodingZombie (health, strength, speed, maxHealth){
+  Zombie.call(this, health, strength, speed);
+  this.health = health;
+  this.strength = strength;
+  this.speed = speed;
+}
+ExplodingZombie.prototype = Object.create(Zombie.prototype,{
+});
 /**
  * Sample run.
  * Feel free to edit this and check your game logic.
