@@ -15,6 +15,9 @@ function Food (name, number, property){
     this.name = name;
     this.number = number;
     this.property = property;
+    this.restoreEnergy = function (){
+
+    };
   }
 Food.prototype = Object.create(Item.prototype,{
 });
@@ -57,21 +60,12 @@ function Player (name, health, strength, speed){
 
     this.equip = function (item){
       if(item instanceof Weapon&&this.equipped===false){
-        if(this.getPack())
+        if(this.getPack().indexOf(item) > -1 ){
         this.equipped=item;
+        }
       }
       return false;
     };
-
-    this.eat = function (item){
-      if (item instanceof Food){
-        if (this.getPack().indexOf(item) > -1 ){
-          this.health += item.property;
-      }
-
-        }
-    };
-
    /*   if(item instanceof Food){
         for(var i=0;i<=3;i++){
           if(pack[i] instanceof Food){
@@ -81,6 +75,8 @@ function Player (name, health, strength, speed){
           return false;
       }
       return false;*/
+
+
 }
 
 /**
@@ -96,8 +92,19 @@ function Player (name, health, strength, speed){
  */
 
   Player.prototype.checkPack = function (){
-      return this.getPack();
+      var formatPack;
+        if(this.getPack().length ===3){
+          formatPack = this.getPack()[0] + this.getPack()[1] + this.getPack()[2] + this.getPack()[3];
+      } else if (this.getPack().length ===2){
+          formatPack = this.getPack()[0] + this.getPack()[1] + this.getPack()[2];
+      } else if (this.getPack().length ===1){
+          formatPack = this.getPack()[0] + this.getPack()[1];
+      }
+      console.log(formatPack);
+      return formatPack;
     };
+}
+
 /**
  * Player Class Method => takeItem(item)
  * -----------------------------
@@ -117,9 +124,12 @@ function Player (name, health, strength, speed){
  */
 Player.prototype.takeItem = function(item){
       if(this.getPack().length>=3){
+        console.log("Bag was full");
         return false;
-      }else if(item){
+      }if(item){
+        console.log(item, "put into bag!");
         this.getPack().push(item);
+        return true;
     }
   };
 /**
@@ -147,10 +157,17 @@ Player.prototype.takeItem = function(item){
  * @param {Item/Weapon/Food} item   The item to discard.
  * @return {boolean} true/false     Whether player was able to remove item from pack.
  */
-Player.prototype.discardItem = function (){
 
-};
-
+Player.prototype.discardItem = function (item) {
+      var index = this.getPack().indexOf(item);
+        if(index >= 0){
+          this.getPack().splice(index, 1);  //??????????????
+        console.log("Item: ",item,"was discarded");
+          return true;
+        }
+        console.log("Nothing was discarded");
+        return false;
+  };
 
 /**
  * Player Class Method => equip(itemToEquip)
@@ -172,6 +189,8 @@ Player.prototype.discardItem = function (){
  * @param {Weapon} itemToEquip  The weapon item to equip.
  */
 
+/*Player.prototype.equip = function (itemToEquip) {
+};*/
 
 /**
  * Player Class Method => eat(itemToEat)
@@ -191,6 +210,17 @@ Player.prototype.discardItem = function (){
  * @name eat
  * @param {Food} itemToEat  The food item to eat.
  */
+  Player.prototype.eat = function (itemToEat){
+      if (itemToEat instanceof Food){
+        var index = this.getPack().indexOf(itemToEat);
+        if(index >= 0){
+          this.getPack().splice(index, 1);
+          this.health += itemToEat.property;
+          //this.getPack().discardItem(itemToEat);
+        }
+
+      }
+    };
 
 
 /**
