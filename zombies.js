@@ -56,15 +56,6 @@ function Player (name, health, strength, speed){
     this.getMaxHealth = function (){
       return this.health;
     };
-
-    this.equip = function (item){
-      if(item instanceof Weapon&&this.equipped===false){
-        if(this.getPack().indexOf(item) > -1 ){
-        this.equipped=item;
-        }
-      }
-      return false;
-    };
 }
 /**
  * Player Class Method => checkPack()
@@ -89,7 +80,6 @@ function Player (name, health, strength, speed){
       console.log(formatPack);
       return formatPack;
     };
-
 /**
  * Player Class Method => takeItem(item)
  * -----------------------------
@@ -111,7 +101,7 @@ Player.prototype.takeItem = function(item){
       if(this.getPack().length>=3){
         console.log("Bag was full");
         return false;
-      }if(item){
+      }if(this.getPack().length<3){
         console.log(item, "put into bag!");
         this.getPack().push(item);
         return true;
@@ -146,12 +136,13 @@ Player.prototype.takeItem = function(item){
 Player.prototype.discardItem = function (item) {
       var index = this.getPack().indexOf(item);
         if(index >= 0){
-          this.getPack().splice(index, 1);  //??????????????
+          this.getPack().splice(index, 1);
         console.log("Item: ",item,"was discarded");
           return true;
-        }
+        }else {
         console.log("Nothing was discarded");
         return false;
+      }
   };
 
 /**
@@ -174,6 +165,26 @@ Player.prototype.discardItem = function (item) {
  * @param {Weapon} itemToEquip  The weapon item to equip.
  */
 
+   Player.prototype.equip = function (item){
+      if(item instanceof Weapon){
+        var indexOfItem = (this.getPack().indexOf(item));
+        if(indexOfItem > -1){
+
+          if(this.equipped===false){
+            this.getPack().splice(indexOfItem, 1);
+            this.equipped=item;
+
+          }else{
+            this.getPack().splice(indexOfItem, 1);
+            //var swap = this.equipped;
+            //this.getPack().push(swap);
+            this.getPack().push(this.equipped);
+            this.equipped = item;
+        }
+      }
+    }
+/*      return false;*/
+  };
 /*Player.prototype.equip = function (itemToEquip) {
 };*/
 
@@ -200,9 +211,16 @@ Player.prototype.discardItem = function (item) {
         var index = this.getPack().indexOf(itemToEat);
         if(index >= 0){
           this.getPack().splice(index, 1);
-          this.health += itemToEat.property;
-          //this.getPack().discardItem(itemToEat);
+          // if(this.getMaxHealth() >= this.health + itemToEat.energy){
+            this.health += itemToEat.energy;
+        if(this.health>this.getMaxHealth()){
+            this.health = this.getMaxHealth();
         }
+          // }
+          // else {
+          //   this.health = this.getMaxHealth();
+        //   }
+         }
 
       }
     };
@@ -236,14 +254,21 @@ Player.prototype.useItem = function (useItem){
  *
  * Prints the player's name and equipped weapon's name.
  * If nothing is equipped, prints a message saying so.
+
  * Also returns the equipped weapon's name or false if nothing is equipped.
  * You should be able to invoke this function on a Player instance.
  *
  * @name equippedWith
  * @return {string/boolean}   Weapon name or false if nothing is equipped.
  */
-Player.prototype.equippedWith = function (useItem){
+Player.prototype.equippedWith = function (){
+  if(this.equipped===false){
+    console.log("You have nothing... nothing in your life");
+    return false;
 
+  }else {console.log(this.name," and ",this.equipped.name);
+    return this.equipped.name;
+  }
 };
 
 
