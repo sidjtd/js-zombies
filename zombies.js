@@ -54,7 +54,7 @@ function Player (name, health, strength, speed){
       return pack;
     };
     this.getMaxHealth = function (){
-      return this.health;
+      return maxHealth;
     };
 }
 /**
@@ -206,7 +206,25 @@ Player.prototype.discardItem = function (item) {
  * @name eat
  * @param {Food} itemToEat  The food item to eat.
  */
-  Player.prototype.eat = function (itemToEat){
+    Player.prototype.eat = function (itemToEat){
+      var pack = this.getPack();
+      var packIndex = pack.indexOf (itemToEat);
+      var maxHealth = this.getMaxHealth();
+
+      if (itemToEat instanceof Food){
+        if (packIndex >= 0){
+          pack.splice(packIndex, 1);
+          if (itemToEat.energy + this.health > maxHealth) {
+            this.health = maxHealth;
+          } else {
+            this.health += itemToEat.energy;
+          }
+        }
+      }
+    };
+
+
+/*  Player.prototype.eat = function (itemToEat){
       if (itemToEat instanceof Food){
         var index = this.getPack().indexOf(itemToEat);
         if(index >= 0){
@@ -223,7 +241,7 @@ Player.prototype.discardItem = function (item) {
          }
 
       }
-    };
+    };*/
 
 
 /**
