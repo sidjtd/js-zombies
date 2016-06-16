@@ -10,13 +10,12 @@ function Weapon (name, damage){
 Weapon.prototype = Object.create(Item.prototype,{
 });
 
-function Food (name, number, property){
+function Food (name, energy){
     Item.call(this, name);
     this.name = name;
-    this.number = number;
-    this.property = property;
+    this.energy = energy;
     this.restoreEnergy = function (){
-
+      this.health += this.energy;
     };
   }
 Food.prototype = Object.create(Item.prototype,{
@@ -66,19 +65,7 @@ function Player (name, health, strength, speed){
       }
       return false;
     };
-   /*   if(item instanceof Food){
-        for(var i=0;i<=3;i++){
-          if(pack[i] instanceof Food){
-            this.health += item.number;
-          }
-        }
-          return false;
-      }
-      return false;*/
-
-
 }
-
 /**
  * Player Class Method => checkPack()
  * -----------------------------
@@ -90,7 +77,6 @@ function Player (name, health, strength, speed){
  *
  * @name checkPack
  */
-
   Player.prototype.checkPack = function (){
       var formatPack;
         if(this.getPack().length ===3){
@@ -103,7 +89,6 @@ function Player (name, health, strength, speed){
       console.log(formatPack);
       return formatPack;
     };
-}
 
 /**
  * Player Class Method => takeItem(item)
@@ -235,7 +220,14 @@ Player.prototype.discardItem = function (item) {
  * @name useItem
  * @param {Item/Weapon/Food} item   The item to use.
  */
-
+Player.prototype.useItem = function (useItem){
+  if (useItem instanceof Food) {
+    this.eat();
+  }
+  if (useItem instanceof Weapon) {
+    this.equip();
+  }
+};
 
 /**
  * Player Class Method => equippedWith()
@@ -250,7 +242,9 @@ Player.prototype.discardItem = function (item) {
  * @name equippedWith
  * @return {string/boolean}   Weapon name or false if nothing is equipped.
  */
+Player.prototype.equippedWith = function (useItem){
 
+};
 
 
 function Zombie (health, strength, speed, maxHealth){
